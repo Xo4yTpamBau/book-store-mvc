@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar scroll</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+                aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarScroll">
+            <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                <li class="nav-item">
+                    <a class="nav-link disabled" th:if="${session.user != null}"
+                       th:text="${'Welcome ' + session.user.name}" tabindex="-1" aria-disabled="true"></a>
+                </li>
+                <li th:if="${session.user == null} " class="nav-item">
+                    <a class="nav-link" href="/user/registration">Registration</a>
+                </li>
+                <li th:if="${session.user == null}" class="nav-item">
+                    <a class="nav-link" href="/user/authorization">Authorization</a>
+                </li>
+                <li th:if="${session.user != null}" class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        Admin
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                        <li><a class="dropdown-item" href="/address/save">Create Address</a></li>
+                        <li><a class="dropdown-item" href="/author/save">Create Author</a></li>
+                        <li><a class="dropdown-item" href="/book/save">Create Book</a></li>
+                        <li><a class="dropdown-item" href="/store/save">Create Store</a></li>
+                    </ul>
+                </li>
+                <li th:if="${session.user != null}" class="nav-item">
+                    <a class="nav-link" href="/user/logout">Logout</a>
+                </li>
+            </ul>
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-sm-6">
+            <div class="card">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${book.title}"></h5>
+                    <p class="card-text" th:text="${book.description}"></p>
+                    <!--                <p class="card-text" th:text="${book.author.name}"></p>-->
+                    <p class="card-text" th:text="${book.price}"></p>
+                    <form action="/book/likeBook" method="post">
+                        <input type="hidden" name="bookId" th:value="${book.id}">
+                        <button type="submit" class="btn btn-primary">
+                            Like <span class="badge bg-secondary" th:text="${book.likes.size}"></span>
+                        </button>
+                    </form>
+                    <form action="/book/bookmark" method="post">
+                        <input type="hidden" name="bookId" th:value="${book.id}">
+                        <button type="submit" class="btn btn-primary">Like</button>
+                    </form>
+                </div>
+            </div>
+            <ul class="list-group">
+                <li th:each="comment : ${book.comments}" class="list-group-item" th:text="${comment.text}"></li>
+            </ul>
+            <form action="/book/createComment" method="post">
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Comment</label>
+                    <input type="text" name="text" class="form-control" id="exampleInputPassword1">
+                </div>
+                <button type="submit" class="btn btn-primary">Comment</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
